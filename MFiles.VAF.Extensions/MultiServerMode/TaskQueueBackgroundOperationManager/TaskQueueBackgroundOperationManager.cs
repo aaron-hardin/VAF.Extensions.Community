@@ -58,7 +58,7 @@ namespace MFiles.VAF.Extensions.MultiServerMode
 		/// <summary>
 		/// The queue Id.
 		/// </summary>
-		public string QueueId { get;set; }
+		public string QueueId { get; private set; }
 
 		/// <summary>
 		/// The vault application that contains this background operation manager.
