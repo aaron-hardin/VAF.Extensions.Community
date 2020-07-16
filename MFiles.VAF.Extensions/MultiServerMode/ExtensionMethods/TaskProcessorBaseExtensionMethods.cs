@@ -20,7 +20,7 @@ namespace MFiles.VAF.Extensions.MultiServerMode
 		/// <param name="allowRetry">Whether to allow retries if needed.</param>
 		/// <param name="activationTimestamp">The datetime to activate the task (otherwise ASAP).</param>
 		/// <returns></returns>
-		public static string AddTask<TSettings, TTaskQueueDirectiveType>
+		public static string AddTaskToQueue<TSettings, TTaskQueueDirectiveType>
 		(
 			this TaskProcessorBase<TSettings> taskProcessor,
 			string taskQueue,
@@ -65,7 +65,7 @@ namespace MFiles.VAF.Extensions.MultiServerMode
 			where TSettings : AppTaskProcessorSettings
 		{
 			// Use the other overload
-			return taskProcessor.AddTask<TSettings, TaskQueueDirective>
+			return taskProcessor.AddTaskToQueue
 			(
 				taskQueue,
 				taskType,
