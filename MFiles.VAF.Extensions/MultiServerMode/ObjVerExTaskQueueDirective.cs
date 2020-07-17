@@ -12,9 +12,46 @@ namespace MFiles.VAF.Extensions.MultiServerMode
 		: TaskQueueDirective
 	{
 		/// <summary>
-		/// Parse-able ObjVerEx string.
+		/// Parse-able ObjVer string.
 		/// </summary>
-		public string ObjVerEx { get; set; }
+		public string ObjVerString { get; set; }
+
+		/// <summary>
+		/// Returns an instance of the <see cref="ObjVer"/>
+		/// represented by <see cref="ObjVerString"/>.
+		/// </summary>
+		/// <returns></returns>
+		public ObjVer ToObjVer()
+		{
+			try
+			{
+				return MFUtils.ParseObjVerString(this.ObjVerString);
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Returns an instance of the <see cref="ObjVer"/>
+		/// represented by <see cref="ObjVerString"/>.
+		/// </summary>
+		/// <returns></returns>
+		public ObjVerEx ToObjVerEx(Vault vault)
+		{
+			// Sanity.
+			if (null == vault)
+				throw new ArgumentNullException(nameof(vault));
+
+			// Get the objver.
+			var objVer = this.ToObjVer();
+			if(null == objVer)
+				return null;
+
+			// Create the objverex
+			return new ObjVerEx(vault, objVer);
+		}
 
 		/// <summary>
 		/// Creates a <see cref="ObjVerExTaskQueueDirective"/>
@@ -30,7 +67,7 @@ namespace MFiles.VAF.Extensions.MultiServerMode
 
 			return new ObjVerExTaskQueueDirective()
 			{
-				ObjVerEx = objVer.ToString(parsable: true)
+				ObjVerString = objVer.ToString(parsable: true)
 			};
 		}
 		

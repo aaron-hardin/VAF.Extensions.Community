@@ -10,10 +10,10 @@ namespace MFiles.VAF.Extensions.Tests.MultiServerMode
 	public class ObjVerExTaskQueueDirectiveTests
 	{
 		[TestMethod]
-		public void ObjVerExIsReadWrite()
+		public void ObjVerStringIsReadWrite()
 		{
 			var type = typeof(ObjVerExTaskQueueDirective);
-			var property = type.GetProperty("ObjVerEx");
+			var property = type.GetProperty(nameof(ObjVerExTaskQueueDirective.ObjVerString));
 			Assert.IsNotNull(property);
 			Assert.IsTrue(property.CanRead);
 			Assert.IsTrue(property.CanWrite);
@@ -41,7 +41,19 @@ namespace MFiles.VAF.Extensions.Tests.MultiServerMode
 			Assert.AreEqual
 			(
 				"(0-1-2)",
-				ObjVerExTaskQueueDirective.FromObjVer(objVer).ObjVerEx
+				ObjVerExTaskQueueDirective.FromObjVer(objVer).ObjVerString
+			);
+		}
+
+		[TestMethod]
+		public void ToObjVerCorrect()
+		{
+			var objVer = new ObjVer();
+			objVer.SetIDs(0, 1, 2);
+			Assert.AreEqual
+			(
+				"(0-1-2)",
+				ObjVerExTaskQueueDirective.FromObjVer(objVer).ToObjVer().ToString(true)
 			);
 		}
 	}
