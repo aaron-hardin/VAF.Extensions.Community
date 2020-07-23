@@ -201,7 +201,7 @@ namespace MFiles.VAF.Extensions.MultiServerMode
 					// We have no registered background operation to handle the callback.
 					SysUtils.ReportErrorToEventLog
 					(
-						$"No background operation found with name {backgroundOperationDirective.BackgroundOperationName}(queue: {job.AppTaskQueueId}, task type: {job.AppTaskId})."
+						$"No background operation found with name {backgroundOperationDirective.BackgroundOperationName} (queue: {job.AppTaskQueueId}, task type: {job.AppTaskId})."
 					);
 					return;
 				} 
@@ -214,12 +214,20 @@ namespace MFiles.VAF.Extensions.MultiServerMode
 				// That way even if the job is canceled, fails, or finishes successfully
 				// ...we always schedule the next run.
 				job.ProcessingCompleted += (s, op)
-					=> this.RunOnce
-					(
-						bo.Name,
-						DateTime.UtcNow.Add(bo.Interval.Value),
-						dir
-					);
+					=>
+				{
+					var completedAt = DateTime.UtcNow;
+					var nextRunTime = completedAt.Add(bo.Interval.Value);
+#if DEBUG
+					System.Diagnostics.Debug.WriteLine($"Job completed at {completedAt.ToLocalTime().ToLongTimeString()}, and being re-scheduled for {nextRunTime.ToLocalTime().ToLongTimeString()}");
+#endif
+					this.RunOnce
+					  (
+						  bo.Name,
+						  DateTime.UtcNow.Add(bo.Interval.Value),
+						  dir
+					  );
+				};
 			}
 
 			// Perform the action.
